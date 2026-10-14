@@ -1,735 +1,762 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Binomial | Parameter Studio</title>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
-
-    :root {
-      --bg: #080c18;
-      --panel: #12192d;
-      --line: rgba(175,190,230,.14);
-      --muted: #8995b3;
-      --text: #f3f5ff;
-      --violet: #9b8cff;
-      --cyan: #6ce6e1;
-      --rose: #ff8eae;
-      --good: #76e6bd;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: 'Manrope', sans-serif;
-      background:
-        radial-gradient(ellipse at 12% 0%, rgba(112,87,255,.18), transparent 38%),
-        radial-gradient(ellipse at 95% 20%, rgba(51,203,206,.10), transparent 32%),
-        var(--bg);
-    }
-
-    .shell {
-      width: min(1160px, calc(100% - 40px));
-      margin: auto;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 27px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .14em;
-    }
-
-    .brand-mark {
-      width: 38px;
-      height: 38px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      color: #090d1b;
-      font-size: 20px;
-      background: linear-gradient(135deg, var(--cyan), var(--violet));
-    }
-
-    .muted { color: var(--muted); }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 99px;
-      font-size: 11px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--good);
-      box-shadow: 0 0 12px var(--good);
-    }
-
-    main { padding: 55px 0 45px; }
-
-    .eyebrow {
-      color: var(--cyan);
-      font: 11px 'DM Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: .18em;
-    }
-
-    h1 {
-      margin: 18px 0 14px;
-      font-size: clamp(35px, 5vw, 60px);
-      line-height: 1.08;
-      letter-spacing: -.055em;
-    }
-
-    h1 span {
-      color: transparent;
-      background: linear-gradient(95deg, #fff, #b8adff, #74e6e0);
-      background-clip: text;
-    }
-
-    .intro {
-      max-width: 650px;
-      color: #9da9c5;
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .topline {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-
-    .prompt-tag {
-      padding: 13px 16px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      white-space: nowrap;
-    }
-
-    .prompt-tag small {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--muted);
-      font: 10px 'DM Mono', monospace;
-      text-transform: uppercase;
-    }
-
-    .prompt-tag strong { font-size: 13px; }
-
-    .workspace {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .card {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(18,25,45,.88);
-      box-shadow: 0 24px 80px rgba(0,0,0,.18);
-    }
-
-    .result-card {
-      background: linear-gradient(145deg, #19203a, #0c1323);
-    }
-
-    .card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 24px 26px 20px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-label {
-      margin-bottom: 7px;
-      color: var(--muted);
-      font: 10px 'DM Mono', monospace;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: 17px;
-    }
-
-    .step {
-      display: grid;
-      place-items: center;
-      width: 32px;
-      height: 32px;
-      border: 1px solid rgba(155,140,255,.28);
-      border-radius: 10px;
-      color: var(--violet);
-      background: rgba(155,140,255,.08);
-      font: 12px 'DM Mono', monospace;
-    }
-
-    .card-body { padding: 27px 26px; }
-
-    .field { margin-bottom: 25px; }
-
-    .field-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    label {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .symbol {
-      color: var(--violet);
-      font: 13px 'DM Mono', monospace;
-    }
-
-    input {
-      width: 100%;
-      padding: 15px 16px;
-      border: 1px solid rgba(175,190,230,.18);
-      border-radius: 13px;
-      outline: none;
-      color: var(--text);
-      background: rgba(4,8,19,.65);
-      font: 16px 'DM Mono', monospace;
-      transition: .2s;
-    }
-
-    input:focus {
-      border-color: var(--violet);
-      box-shadow: 0 0 0 4px rgba(155,140,255,.1);
-    }
-
-    input.invalid { border-color: var(--rose); }
-
-    .hint {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .error {
-      display: none;
-      margin-top: 8px;
-      color: var(--rose);
-      font-size: 11px;
-    }
-
-    .range-track {
-      height: 3px;
-      margin-top: 12px;
-      overflow: hidden;
-      border-radius: 99px;
-      background: rgba(255,255,255,.08);
-    }
-
-    .range-fill {
-      width: 35%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--violet), var(--cyan));
-      transition: width .2s;
-    }
-
-    .range-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 9px;
-      color: #7e8aa8;
-      font: 9px 'DM Mono', monospace;
-    }
-
-    .actions {
-      display: flex;
-      gap: 11px;
-      margin-top: 30px;
-    }
-
-    button {
-      cursor: pointer;
-      padding: 14px 18px;
-      border: 0;
-      border-radius: 12px;
-      font: 700 12px 'Manrope', sans-serif;
-      transition: .2s;
-    }
-
-    .primary {
-      flex: 1;
-      color: #090d1b;
-      background: linear-gradient(100deg, #b4a7ff, #77e5df);
-    }
-
-    .primary:hover { filter: brightness(1.08); }
-
-    .secondary {
-      border: 1px solid var(--line);
-      color: #bac5df;
-      background: rgba(255,255,255,.035);
-    }
-
-    .secondary:hover { background: rgba(255,255,255,.08); }
-
-    .live-label {
-      color: var(--good);
-      font: 10px 'DM Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-    }
-
-    .result-intro {
-      margin: 0 0 25px;
-      color: #9ca9c5;
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .value-box {
-      padding: 21px;
-      border: 1px solid rgba(155,140,255,.22);
-      border-radius: 17px;
-      background: linear-gradient(120deg, rgba(155,140,255,.09), rgba(108,230,225,.035));
-    }
-
-    .value-caption {
-      color: #a5b0ca;
-      font: 10px 'DM Mono', monospace;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-    }
-
-    .value-equation {
-      display: flex;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .n-value {
-      font-size: clamp(35px, 4vw, 48px);
-      font-weight: 800;
-      letter-spacing: -.06em;
-    }
-
-    .separator {
-      color: #56627e;
-      font-size: 22px;
-    }
-
-    .p-value {
-      color: var(--cyan);
-      font: 500 clamp(25px, 3vw, 34px) 'DM Mono', monospace;
-    }
-
-    .value-key {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      margin-top: 17px;
-      color: #8996b3;
-      font-size: 10px;
-    }
-
-    .key-dot {
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      margin-right: 5px;
-      border-radius: 2px;
-      background: var(--violet);
-    }
-
-    .key-dot.cyan { background: var(--cyan); }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .detail {
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(255,255,255,.025);
-    }
-
-    .detail span {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .detail strong {
-      color: #edf0ff;
-      font: 500 17px 'DM Mono', monospace;
-    }
-
-    .formula {
-      margin-top: 23px;
-      padding-top: 20px;
-      border-top: 1px solid var(--line);
-    }
-
-    .formula-title {
-      margin-bottom: 11px;
-      color: var(--muted);
-      font: 10px 'DM Mono', monospace;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .formula-expression {
-      color: #e0dcff;
-      font-size: 17px;
-    }
-
-    .formula-note {
-      margin-top: 9px;
-      color: #7784a2;
-      font-size: 11px;
-      line-height: 1.7;
-    }
-
-    .notice {
-      display: flex;
-      gap: 10px;
-      margin-top: 19px;
-      color: #8290ae;
-      font-size: 10px;
-      line-height: 1.7;
-    }
-
-    footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 19px 0 25px;
-      border-top: 1px solid var(--line);
-      color: #7c89a6;
-      font: 10px 'DM Mono', monospace;
-    }
-
-    @media (max-width: 780px) {
-      .workspace { grid-template-columns: 1fr; }
-      .topline { align-items: flex-start; flex-direction: column; }
-      main { padding-top: 40px; }
-      .card-head { padding: 21px; }
-      .card-body { padding: 23px 21px; }
-    }
-
-    @media (max-width: 480px) {
-      .shell { width: calc(100% - 26px); }
-      header { flex-wrap: wrap; padding: 19px 0; }
-      h1 { font-size: 38px; }
-      .actions { flex-direction: column; }
-      .secondary { width: 100%; }
-      footer { flex-direction: column; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discrete Probability Distributions | AIML Lab</title>
+
+    <style>
+        :root {
+            --primary: #3157d5;
+            --primary-dark: #2443ad;
+            --background: #f5f7fb;
+            --surface: #ffffff;
+            --text: #18233b;
+            --muted: #69758b;
+            --border: #e2e7f0;
+            --success: #16845b;
+            --error: #c0392b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar {
+            max-width: 1150px;
+            margin: auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #eaf0ff;
+            color: var(--primary);
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .brand h2 {
+            font-size: 17px;
+            line-height: 1.3;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        nav {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        nav button:hover,
+        nav button.active {
+            background: #edf1ff;
+            color: var(--primary);
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 38px auto;
+            padding: 0 24px;
+        }
+
+        .hero {
+            background: linear-gradient(120deg, #203b91, #4168e5);
+            color: white;
+            padding: 38px;
+            border-radius: 18px;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 38px);
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            font-size: 15px;
+            opacity: 0.92;
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            font-size: 23px;
+            margin-bottom: 5px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .module-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .module-card.available {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .module-card.available:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px #18233b12;
+        }
+
+        .module-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            background: #edf1ff;
+            color: var(--primary);
+            border-radius: 12px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .module-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .module-card p {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        .status {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: var(--success);
+            background: #e8f8f0;
+        }
+
+        .status.soon {
+            background: #f0f2f6;
+            color: var(--muted);
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 30px;
+        }
+
+        .panel-header {
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .panel-header h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .panel-header p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .formula {
+            padding: 18px;
+            text-align: center;
+            border: 1px solid #e0e7ff;
+            background: #f5f7ff;
+            border-radius: 10px;
+            margin-bottom: 26px;
+        }
+
+        .equation {
+            font-family: Georgia, serif;
+            font-size: 24px;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+
+        .formula p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .input-card {
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .input-card label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-description {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d6dce8;
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text);
+            background: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px #3157d51a;
+        }
+
+        input.invalid {
+            border-color: var(--error);
+        }
+
+        .input-error {
+            display: block;
+            min-height: 20px;
+            color: var(--error);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .summary {
+            margin-top: 26px;
+            padding: 24px;
+            background: #f8faff;
+            border: 1px solid #dfe7ff;
+            border-radius: 12px;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .summary-header h3 {
+            font-size: 17px;
+        }
+
+        .live-badge {
+            font-size: 11px;
+            color: var(--success);
+            background: #e8f8f0;
+            border-radius: 20px;
+            padding: 5px 9px;
+            font-weight: 700;
+        }
+
+        .selected-values {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .value-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .value-box span {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .value-box strong {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .summary-note {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .coming-soon {
+            text-align: center;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 75px 20px;
+        }
+
+        .coming-soon h2 {
+            margin-bottom: 8px;
+        }
+
+        .coming-soon p {
+            color: var(--muted);
+            max-width: 460px;
+            margin: auto;
+        }
+
+        .primary-button {
+            border: none;
+            background: var(--primary);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .primary-button:hover {
+            background: var(--primary-dark);
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            border-top: 1px solid var(--border);
+            background: white;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 760px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px 18px;
+            }
+
+            nav {
+                width: 100%;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            nav button {
+                white-space: nowrap;
+                padding: 9px 12px;
+            }
+
+            main {
+                margin-top: 22px;
+                padding: 0 16px;
+            }
+
+            .hero {
+                padding: 28px 22px;
+            }
+
+            .grid,
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 20px 16px;
+            }
+
+            .equation {
+                font-size: 19px;
+            }
+
+            .selected-values {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="shell">
-    <header>
-      <div class="brand">
-        <div class="brand-mark">∑</div>
-        <div>BINOMIAL <span class="muted">/ STUDIO</span></div>
-      </div>
-      <div class="status">
-        <span class="status-dot"></span>
-        INPUT MODE
-      </div>
-    </header>
 
-    <main>
-      <div class="topline">
-        <div>
-          <div class="eyebrow">Parameter configuration</div>
-          <h1>Set the <span>foundation.</span></h1>
-          <p class="intro">
-            Define the two parameters that shape a binomial distribution.
-            Your selected values appear in the summary panel as you type.
-          </p>
-        </div>
-
-        <div class="prompt-tag">
-          <small>Prompt 02</small>
-          <strong>Binomial inputs</strong>
-        </div>
-      </div>
-
-      <section class="workspace">
-        <!-- INPUT PANEL -->
-        <div class="card">
-          <div class="card-head">
+<header>
+    <div class="navbar">
+        <div class="brand">
+            <div class="brand-icon">∑</div>
             <div>
-              <div class="section-label">01 — Configuration</div>
-              <h2>Distribution parameters</h2>
+                <h2>Discrete Probability</h2>
+                <p>Undergraduate AIML Laboratory</p>
             </div>
-            <div class="step">01</div>
-          </div>
-
-          <div class="card-body">
-            <form id="parameterForm" novalidate>
-              <div class="field">
-                <div class="field-top">
-                  <label for="n">Number of trials</label>
-                  <span class="symbol">n ∈ ℤ⁺</span>
-                </div>
-
-                <input
-                  id="n"
-                  type="number"
-                  min="1"
-                  step="1"
-                  value="20"
-                >
-
-                <div class="hint">
-                  Enter a positive whole number of independent trials.
-                </div>
-                <div class="error" id="nError">
-                  Enter a positive whole number.
-                </div>
-              </div>
-
-              <div class="field">
-                <div class="field-top">
-                  <label for="p">Probability of success</label>
-                  <span class="symbol">0 ≤ p ≤ 1</span>
-                </div>
-
-                <input
-                  id="p"
-                  type="number"
-                  min="0"
-                  max="1"
-                  step="any"
-                  value="0.35"
-                >
-
-                <div class="range-track">
-                  <div class="range-fill" id="rangeFill"></div>
-                </div>
-
-                <div class="range-row">
-                  <span>0.00 · IMPOSSIBLE</span>
-                  <span>1.00 · CERTAIN</span>
-                </div>
-
-                <div class="hint">
-                  Use a decimal between 0 and 1, inclusive.
-                </div>
-                <div class="error" id="pError">
-                  Enter a probability between 0 and 1.
-                </div>
-              </div>
-
-              <div class="actions">
-                <button class="primary" type="submit">
-                  Update parameters ↗
-                </button>
-                <button class="secondary" type="button" id="resetButton">
-                  Reset defaults
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
 
-        <!-- SELECTED VALUES PANEL -->
-        <div class="card result-card">
-          <div class="card-head">
-            <div>
-              <div class="section-label">02 — Live summary</div>
-              <h2>Your selected values</h2>
-            </div>
-            <div class="live-label">● Live preview</div>
-          </div>
+        <nav aria-label="Main navigation">
+            <button class="active" data-page="home">Home</button>
+            <button data-page="binomial">Binomial</button>
+            <button data-page="poisson">Poisson</button>
+            <button data-page="geometric">Geometric</button>
+        </nav>
+    </div>
+</header>
 
-          <div class="card-body">
-            <p class="result-intro">
-              A snapshot of the parameters currently selected for your
-              binomial distribution.
+<main>
+
+    <!-- HOME PAGE -->
+    <section id="home-page">
+        <div class="hero">
+            <div class="eyebrow">AIML Laboratory · Probability & Statistics</div>
+            <h1>Discrete Probability Distributions</h1>
+            <p>
+                Explore fundamental discrete probability distributions
+                through clear concepts and interactive learning modules.
             </p>
+        </div>
 
-            <div class="value-box">
-              <div class="value-caption">Current parameter set</div>
+        <div class="section-heading">
+            <h2>Distribution Modules</h2>
+            <p>Select a module to explore its concepts and parameters.</p>
+        </div>
 
-              <div class="value-equation">
-                <span class="n-value" id="selectedN">20</span>
-                <span class="separator">/</span>
-                <span class="p-value" id="selectedP">0.35</span>
-              </div>
+        <div class="grid">
+            <article class="module-card available" onclick="showPage('binomial')">
+                <div class="module-icon">B(n,p)</div>
+                <h3>Binomial Distribution</h3>
+                <p>Study the number of successes in a fixed number of independent trials.</p>
+                <span class="status">Available</span>
+            </article>
 
-              <div class="value-key">
-                <span><i class="key-dot"></i> Trials (n)</span>
-                <span><i class="key-dot cyan"></i> Success probability (p)</span>
-              </div>
-            </div>
+            <article class="module-card">
+                <div class="module-icon">P(λ)</div>
+                <h3>Poisson Distribution</h3>
+                <p>Study the number of events occurring in a fixed interval.</p>
+                <span class="status soon">Coming Soon</span>
+            </article>
 
-            <div class="detail-grid">
-              <div class="detail">
-                <span>Number of trials · n</span>
-                <strong id="detailN">20</strong>
-              </div>
-              <div class="detail">
-                <span>Success probability · p</span>
-                <strong id="detailP">0.35</strong>
-              </div>
+            <article class="module-card">
+                <div class="module-icon">G(p)</div>
+                <h3>Geometric Distribution</h3>
+                <p>Study the number of trials needed to obtain the first success.</p>
+                <span class="status soon">Coming Soon</span>
+            </article>
+        </div>
+    </section>
+
+    <!-- BINOMIAL DISTRIBUTION PAGE -->
+    <section id="binomial-page" class="hidden">
+
+        <div class="hero">
+            <div class="eyebrow">Probability Distribution · Module 01</div>
+            <h1>Binomial Distribution</h1>
+            <p>
+                Configure the number of trials and probability of success
+                to define a binomial probability model.
+            </p>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Distribution Parameters</h2>
+                <p>Enter valid values for the two parameters below.</p>
             </div>
 
             <div class="formula">
-              <div class="formula-title">Distribution notation</div>
-              <div class="formula-expression" id="notation">
-                X ~ Binomial(20, 0.35)
-              </div>
-              <div class="formula-note">
-                These parameters define the distribution. No simulation
-                or random sampling is performed on this screen.
-              </div>
+                <div class="equation">
+                    P(X = k) = C(n,k) p<sup>k</sup>(1 − p)<sup>n − k</sup>
+                </div>
+                <p>
+                    n = number of trials · p = probability of success ·
+                    k = number of successes
+                </p>
             </div>
 
-            <div class="notice">
-              <span>ⓘ</span>
-              <span>
-                Values update as you type. Use Update parameters to
-                validate and confirm the selection.
-              </span>
+            <div class="input-grid">
+
+                <div class="input-card">
+                    <label for="trials">Number of Trials (n)</label>
+                    <span class="input-description">
+                        Must be a positive integer greater than zero.
+                    </span>
+
+                    <input
+                        type="number"
+                        id="trials"
+                        value="20"
+                        min="1"
+                        step="1"
+                        placeholder="Enter number of trials"
+                        aria-describedby="trials-error">
+
+                    <span id="trials-error" class="input-error"></span>
+                </div>
+
+                <div class="input-card">
+                    <label for="probability">Probability of Success (p)</label>
+                    <span class="input-description">
+                        Enter a probability between 0 and 1, inclusive.
+                    </span>
+
+                    <input
+                        type="number"
+                        id="probability"
+                        value="0.35"
+                        min="0"
+                        max="1"
+                        step="any"
+                        placeholder="Enter probability"
+                        aria-describedby="probability-error">
+
+                    <span id="probability-error" class="input-error"></span>
+                </div>
+
             </div>
-          </div>
+
+            <div class="summary" aria-live="polite">
+                <div class="summary-header">
+                    <h3>Selected Distribution Values</h3>
+                    <span class="live-badge" id="status">VALID PARAMETERS</span>
+                </div>
+
+                <div class="selected-values">
+                    <div class="value-box">
+                        <span>Number of Trials (n)</span>
+                        <strong id="display-trials">20</strong>
+                    </div>
+
+                    <div class="value-box">
+                        <span>Probability of Success (p)</span>
+                        <strong id="display-probability">0.35</strong>
+                    </div>
+                </div>
+
+                <p class="summary-note" id="summary-note">
+                    The distribution is configured with 20 trials and a
+                    success probability of 0.35 per trial.
+                </p>
+            </div>
         </div>
-      </section>
-    </main>
+    </section>
 
-    <footer>
-      <span>BINOMIAL / PARAMETER STUDIO</span>
-      <span>PRECISION IN EVERY PARAMETER</span>
-    </footer>
-  </div>
+    <!-- POISSON PAGE -->
+    <section id="poisson-page" class="hidden">
+        <div class="coming-soon">
+            <h2>Poisson Distribution</h2>
+            <p>This module will be implemented in a future update.</p>
+            <button class="primary-button" onclick="showPage('home')">
+                Back to Home
+            </button>
+        </div>
+    </section>
 
-  <script>
-    const form = document.getElementById("parameterForm");
-    const nInput = document.getElementById("n");
-    const pInput = document.getElementById("p");
-    const nError = document.getElementById("nError");
-    const pError = document.getElementById("pError");
-    const resetButton = document.getElementById("resetButton");
+    <!-- GEOMETRIC PAGE -->
+    <section id="geometric-page" class="hidden">
+        <div class="coming-soon">
+            <h2>Geometric Distribution</h2>
+            <p>This module will be implemented in a future update.</p>
+            <button class="primary-button" onclick="showPage('home')">
+                Back to Home
+            </button>
+        </div>
+    </section>
 
-    function formatP(value) {
-      return String(Number(value));
+</main>
+
+<footer>
+    Discrete Probability Distributions | Undergraduate AIML Laboratory
+</footer>
+
+<script>
+    const pages = ["home", "binomial", "poisson", "geometric"];
+
+    function showPage(page) {
+        pages.forEach(name => {
+            document.getElementById(name + "-page")
+                .classList.toggle("hidden", name !== page);
+        });
+
+        document.querySelectorAll("nav button").forEach(button => {
+            button.classList.toggle("active", button.dataset.page === page);
+        });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function validate(showErrors = true) {
-      const n = Number(nInput.value);
-      const p = Number(pInput.value);
-
-      const nValid =
-        nInput.value.trim() !== "" &&
-        Number.isInteger(n) &&
-        n > 0;
-
-      const pValid =
-        pInput.value.trim() !== "" &&
-        Number.isFinite(p) &&
-        p >= 0 &&
-        p <= 1;
-
-      nInput.classList.toggle("invalid", !nValid && showErrors);
-      pInput.classList.toggle("invalid", !pValid && showErrors);
-
-      nError.style.display =
-        !nValid && showErrors ? "block" : "none";
-
-      pError.style.display =
-        !pValid && showErrors ? "block" : "none";
-
-      return { n, p, nValid, pValid, valid: nValid && pValid };
-    }
-
-    function updatePreview() {
-      const result = validate(false);
-
-      document.getElementById("selectedN").textContent =
-        result.nValid ? String(result.n) : "—";
-
-      document.getElementById("detailN").textContent =
-        result.nValid ? String(result.n) : "—";
-
-      document.getElementById("selectedP").textContent =
-        result.pValid ? formatP(result.p) : "—";
-
-      document.getElementById("detailP").textContent =
-        result.pValid ? formatP(result.p) : "—";
-
-      document.getElementById("notation").textContent =
-        `X ~ Binomial(${result.nValid ? result.n : "—"}, ${
-          result.pValid ? formatP(result.p) : "—"
-        })`;
-
-      document.getElementById("rangeFill").style.width =
-        result.pValid ? `${result.p * 100}%` : "0%";
-    }
-
-    nInput.addEventListener("input", updatePreview);
-    pInput.addEventListener("input", updatePreview);
-
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      const result = validate(true);
-
-      if (!result.valid) return;
-
-      updatePreview();
+    document.querySelectorAll("nav button").forEach(button => {
+        button.addEventListener("click", () => {
+            showPage(button.dataset.page);
+        });
     });
 
-    resetButton.addEventListener("click", function() {
-      nInput.value = "20";
-      pInput.value = "0.35";
+    const trialsInput = document.getElementById("trials");
+    const probabilityInput = document.getElementById("probability");
 
-      validate(false);
-      updatePreview();
-    });
+    function validateInputs() {
+        const nValue = trialsInput.value.trim();
+        const pValue = probabilityInput.value.trim();
 
-    updatePreview();
-  </script>
+        const n = Number(nValue);
+        const p = Number(pValue);
+
+        let valid = true;
+
+        const nError = document.getElementById("trials-error");
+        const pError = document.getElementById("probability-error");
+
+        nError.textContent = "";
+        pError.textContent = "";
+
+        trialsInput.classList.remove("invalid");
+        probabilityInput.classList.remove("invalid");
+
+        if (
+            nValue === "" ||
+            !Number.isFinite(n) ||
+            !Number.isInteger(n) ||
+            n <= 0
+        ) {
+            nError.textContent =
+                "Number of trials must be a positive integer.";
+            trialsInput.classList.add("invalid");
+            valid = false;
+        }
+
+        if (
+            pValue === "" ||
+            !Number.isFinite(p) ||
+            p < 0 ||
+            p > 1
+        ) {
+            pError.textContent =
+                "Probability must be between 0 and 1.";
+            probabilityInput.classList.add("invalid");
+            valid = false;
+        }
+
+        const status = document.getElementById("status");
+        const note = document.getElementById("summary-note");
+
+        if (!valid) {
+            status.textContent = "INVALID PARAMETERS";
+            status.style.color = "#c0392b";
+            status.style.background = "#fdecea";
+
+            document.getElementById("display-trials").textContent =
+                nValue === "" ? "—" : nValue;
+
+            document.getElementById("display-probability").textContent =
+                pValue === "" ? "—" : pValue;
+
+            note.textContent =
+                "Please correct the highlighted inputs to configure the distribution.";
+            return;
+        }
+
+        status.textContent = "VALID PARAMETERS";
+        status.style.color = "#16845b";
+        status.style.background = "#e8f8f0";
+
+        document.getElementById("display-trials").textContent = n;
+        document.getElementById("display-probability").textContent =
+            p.toString();
+
+        note.textContent =
+            "The distribution is configured with " + n +
+            " trials and a success probability of " + p +
+            " per trial.";
+    }
+
+    trialsInput.addEventListener("input", validateInputs);
+    probabilityInput.addEventListener("input", validateInputs);
+
+    validateInputs();
+</script>
+
 </body>
 </html>
+```
