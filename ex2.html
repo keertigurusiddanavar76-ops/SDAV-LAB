@@ -1,360 +1,224 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Poisson Lab | Event Intelligence</title>
+<title>Exercise 2 - Poisson Distribution</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root {
-  --bg:#10131c;
-  --panel:#191e2a;
-  --panel2:#202737;
-  --text:#f2f5fb;
-  --muted:#929cb1;
-  --accent:#f5bd68;
-  --cyan:#65d9cf;
-  --border:#30394a;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Inter,"Segoe UI",Arial,sans-serif;
-}
-header{
-  padding:25px 6%;border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;gap:20px;
-}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{
-  width:43px;height:43px;border-radius:13px;background:var(--accent);
-  color:#171922;display:grid;place-items:center;font-size:23px;font-weight:900;
-}
-.brand h1{font-size:17px;margin:0;letter-spacing:.4px}
-.brand p{font-size:11px;color:var(--muted);margin:4px 0 0;letter-spacing:1.5px}
-.status{font-size:11px;color:var(--cyan);border:1px solid #31544f;padding:8px 12px;border-radius:30px}
-main{max-width:1200px;margin:auto;padding:34px 5% 55px}
-.eyebrow{color:var(--accent);font-size:11px;letter-spacing:2px;font-weight:700}
-.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px}
-h2{font-size:clamp(27px,4vw,40px);margin:10px 0}
-.subtitle{color:var(--muted);line-height:1.7;font-size:14px;max-width:620px}
-.lambda-box{background:var(--panel);border:1px solid var(--border);padding:17px 20px;border-radius:16px;min-width:180px}
-.lambda-box label{display:block;color:var(--muted);font-size:11px;margin-bottom:9px}
-.lambda-box select{
-  background:var(--panel2);color:var(--text);border:1px solid var(--border);
-  padding:10px;border-radius:9px;font-size:15px;width:100%;outline:none;
-}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:22px}
-.metric{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:19px;min-width:0}
-.metric .label{color:var(--muted);font-size:12px}
-.metric .value{font-size:clamp(22px,3vw,30px);font-weight:750;margin:12px 0 5px;overflow-wrap:anywhere}
-.metric .note{font-size:11px;color:var(--accent)}
-.layout{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:17px;padding:22px;min-width:0}
-.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
-.panel h3{margin:0;font-size:16px}
-.panel-head span{color:var(--muted);font-size:11px}
-.chart-wrap{height:315px;position:relative}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.control{background:var(--panel2);padding:15px;border-radius:12px}
-.control label{font-size:12px;color:var(--muted);display:block;margin-bottom:10px}
-.control input{width:100%;accent-color:var(--accent)}
-.control strong{color:var(--accent);font-size:18px}
-.result{margin-top:13px;padding:16px;border-radius:12px;background:#252c3a;border:1px solid var(--border)}
-.result .small{font-size:11px;color:var(--muted);margin-bottom:8px}
-.result .big{font-size:24px;font-weight:750;color:var(--cyan)}
-.result .percent{font-size:12px;color:var(--muted);margin-top:5px}
-.formula{font-size:12px;line-height:1.9;color:#c0c8d7;margin-top:15px}
-.formula code{color:var(--accent);font-family:ui-monospace,monospace}
-.compare{margin-top:20px}
-.compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.compare-card{padding:15px;background:var(--panel2);border-radius:13px;border:1px solid var(--border)}
-.compare-card .tag{font-size:12px;font-weight:700}
-.compare-card .peak{font-size:21px;font-weight:750;margin:10px 0 5px}
-.compare-card p{font-size:11px;color:var(--muted);line-height:1.5;margin:0}
-.compare-card canvas{height:90px!important;width:100%!important;margin-top:8px}
-.inference{margin-top:20px;border-left:3px solid var(--accent);background:#211f20;padding:19px 21px;border-radius:0 13px 13px 0}
-.inference h3{margin:0 0 8px;font-size:14px}
-.inference p{margin:0;color:#c3c8d2;font-size:13px;line-height:1.8}
-footer{text-align:center;padding:22px;color:#737e94;font-size:11px;border-top:1px solid var(--border)}
-@media(max-width:850px){
- .metrics{grid-template-columns:repeat(2,1fr)}
- .layout{grid-template-columns:1fr}
- .hero{align-items:flex-start;flex-direction:column}
- .lambda-box{width:100%}
-}
-@media(max-width:460px){
- header{padding:18px 5%}
- .status{display:none}
- main{padding:25px 4% 35px}
- .metrics{gap:9px}
- .metric{padding:14px}
- .panel{padding:16px}
- .compare-grid{grid-template-columns:1fr}
- .compare-card canvas{height:120px!important}
- .chart-wrap{height:270px}
-}
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#f3f6fc;color:#1e293b;line-height:1.6}
+header{background:linear-gradient(135deg,#123b75,#2563eb);color:white;text-align:center;padding:28px 12px}
+nav{background:white;padding:14px;text-align:center}
+nav a{color:#1d4ed8;text-decoration:none;font-weight:bold;margin:8px}
+.container{max-width:1050px;margin:25px auto;padding:0 15px}
+.card{background:white;padding:22px;border-radius:12px;margin-bottom:20px;box-shadow:0 3px 14px #0000000c}
+h2,h3{color:#1d4ed8}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.two{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.stat,.result{background:#eff6ff;padding:18px;border-radius:9px;border-left:4px solid #2563eb}
+.stat span{display:block;color:#475569}
+.stat strong,.value{font-size:24px;color:#1d4ed8;font-weight:bold}
+label{display:block;font-weight:bold;margin-bottom:6px}
+input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:16px}
+button{padding:10px 17px;border:0;border-radius:7px;background:#2563eb;color:white;cursor:pointer;margin:5px;font-weight:bold}
+button.active{background:#15803d}
+.chart{height:360px;position:relative;margin-top:18px}
+.formula{background:#f8fafc;padding:14px;border-radius:8px;margin-top:12px}
+.inference{background:#f0fdf4;border-left:5px solid #16a34a;padding:18px;border-radius:8px}
+#error{color:#dc2626}
+footer{text-align:center;color:#64748b;padding:20px}
+@media(max-width:650px){.grid,.two{grid-template-columns:1fr}.chart{height:300px}.card{padding:16px}}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">
-    <div class="logo">λ</div>
-    <div>
-      <h1>EVENT INTELLIGENCE</h1>
-      <p>PROBABILITY LABORATORY / 02</p>
-    </div>
-  </div>
-  <div class="status">● LAB SIMULATION ACTIVE</div>
+<h1>Discrete Probability Distributions</h1>
+<p>Exercise 2: Interactive Poisson Distribution UI</p>
 </header>
+<nav>
+<a href="#parameters">Parameters</a>
+<a href="#statistics">Statistics</a>
+<a href="#probabilities">Probabilities</a>
+<a href="#comparison">PMF Graph</a>
+<a href="#inference">Inference</a>
+</nav>
 
-<main>
-  <section class="hero">
-    <div>
-      <div class="eyebrow">EXPERIMENT 02 · POISSON DISTRIBUTION</div>
-      <h2>Monitoring Event Frequency</h2>
-      <div class="subtitle">
-        Model the number of events detected by an AI monitoring system.
-        Explore event probabilities and compare how different average rates
-        change the distribution.
-      </div>
-    </div>
-    <div class="lambda-box">
-      <label for="lambda">AVERAGE EVENT RATE (λ)</label>
-      <select id="lambda">
-        <option value="2">λ = 2 · Low activity</option>
-        <option value="6" selected>λ = 6 · Normal activity</option>
-        <option value="10">λ = 10 · High activity</option>
-      </select>
-    </div>
-  </section>
+<main class="container">
+<section class="card">
+<h2>Exercise 2 – Poisson Distribution</h2>
+<p>An AI-based monitoring system has an average event rate of λ = 6. Calculate probabilities and compare λ = 2, 6, and 10.</p>
+</section>
 
-  <section class="metrics">
-    <div class="metric">
-      <div class="label">MEAN · E(X)</div>
-      <div class="value" id="mean">6.00</div>
-      <div class="note">Equal to λ</div>
-    </div>
-    <div class="metric">
-      <div class="label">VARIANCE · Var(X)</div>
-      <div class="value" id="variance">6.00</div>
-      <div class="note">Spread of event counts</div>
-    </div>
-    <div class="metric">
-      <div class="label">EXACTLY 8 EVENTS</div>
-      <div class="value" id="exact">10.34%</div>
-      <div class="note">P(X = 8)</div>
-    </div>
-    <div class="metric">
-      <div class="label">AT MOST 5 EVENTS</div>
-      <div class="value" id="cdf">44.54%</div>
-      <div class="note">P(X ≤ 5)</div>
-    </div>
-  </section>
+<section class="card" id="parameters">
+<h3>1. Distribution Parameters</h3>
+<div class="two">
+<div>
+<label for="lambda">Average event rate (λ)</label>
+<input type="number" id="lambda" min="0" max="100" step="0.1" value="6">
+</div>
+<div>
+<label for="k">Number of events (k)</label>
+<input type="number" id="k" min="0" max="200" step="1" value="8">
+</div>
+</div>
+<p id="error"></p>
+</section>
 
-  <section class="layout">
-    <div class="panel">
-      <div class="panel-head">
-        <h3>Probability Mass Function</h3>
-        <span id="chartLabel">λ = 6</span>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="mainChart"></canvas>
-      </div>
-      <div class="formula">
-        <div>PMF: <code>P(X = k) = (e<sup>−λ</sup> λ<sup>k</sup>) / k!</code></div>
-        <div>Mean: <code>E(X) = λ</code></div>
-        <div>Variance: <code>Var(X) = λ</code></div>
-      </div>
-    </div>
+<section class="card" id="statistics">
+<h3>2. Mean and Variance</h3>
+<div class="grid">
+<div class="stat"><span>Mean (μ = λ)</span><strong id="mean">6</strong></div>
+<div class="stat"><span>Variance (σ² = λ)</span><strong id="variance">6</strong></div>
+<div class="stat"><span>Standard Deviation</span><strong id="sd">2.4495</strong></div>
+</div>
+<div class="formula">
+<strong>Poisson Formula:</strong>
+<p>P(X = k) = e<sup>−λ</sup> λ<sup>k</sup> / k!</p>
+<p>For a Poisson distribution, mean = variance = λ.</p>
+</div>
+</section>
 
-    <div class="panel">
-      <div class="panel-head">
-        <h3>Probability Explorer</h3>
-        <span>Interactive</span>
-      </div>
-      <div class="controls">
-        <div class="control">
-          <label for="kExact">Exact event count (k)</label>
-          <input id="kExact" type="range" min="0" max="25" value="8">
-          <strong id="kExactValue">8</strong>
-        </div>
-        <div class="control">
-          <label for="kCDF">Cumulative limit (k)</label>
-          <input id="kCDF" type="range" min="0" max="25" value="5">
-          <strong id="kCDFValue">5</strong>
-        </div>
-      </div>
+<section class="card" id="probabilities">
+<h3>3. Probability Calculations</h3>
+<div class="two">
+<div class="result">
+<h4>Exactly 8 Events</h4>
+<p id="exactFormula">P(X = 8)</p>
+<div class="value" id="exact">0.103258</div>
+<p id="exactPercent">10.3258%</p>
+</div>
+<div class="result">
+<h4>At Most 5 Events</h4>
+<p>P(X ≤ 5)</p>
+<div class="value" id="cdf">0.445679</div>
+<p id="cdfPercent">44.5679%</p>
+</div>
+</div>
+<div class="formula">
+<p id="explanation">When λ = 6, the probability of exactly 8 events is about 10.3258%, and the probability of at most 5 events is about 44.5679%.</p>
+</div>
+</section>
 
-      <div class="result">
-        <div class="small" id="exactTitle">PROBABILITY OF EXACTLY 8 EVENTS</div>
-        <div class="big" id="exactResult">0.1033</div>
-        <div class="percent" id="exactPercent">10.33% chance</div>
-      </div>
-      <div class="result">
-        <div class="small" id="cdfTitle">PROBABILITY OF AT MOST 5 EVENTS</div>
-        <div class="big" id="cdfResult">0.4457</div>
-        <div class="percent" id="cdfPercent">44.57% chance</div>
-      </div>
-      <div class="formula">
-        <div>Cumulative probability:</div>
-        <code>P(X ≤ k) = Σ P(X = i), for i = 0 to k</code>
-      </div>
-    </div>
-  </section>
+<section class="card" id="comparison">
+<h3>4. Compare Poisson PMF Graphs</h3>
+<p>Select a distribution or compare all three graphs.</p>
+<button data-lambda="2">λ = 2</button>
+<button data-lambda="6">λ = 6</button>
+<button data-lambda="10">λ = 10</button>
+<button id="all" class="active">Compare All</button>
+<div class="chart"><canvas id="chart"></canvas></div>
+<div class="formula">
+<strong id="chartTitle">Comparing λ = 2, 6, and 10</strong>
+<p id="chartText">Increasing λ shifts the distribution toward larger event counts.</p>
+</div>
+</section>
 
-  <section class="panel compare">
-    <div class="panel-head">
-      <h3>Rate Comparison Studio</h3>
-      <span>λ = 2 vs 6 vs 10</span>
-    </div>
-    <div class="compare-grid">
-      <div class="compare-card">
-        <div class="tag" style="color:#65d9cf">λ = 2 · LOW</div>
-        <div class="peak">2 events</div>
-        <p>Probability mass concentrates around smaller event counts.</p>
-        <canvas id="chart2"></canvas>
-      </div>
-      <div class="compare-card">
-        <div class="tag" style="color:#f5bd68">λ = 6 · MEDIUM</div>
-        <div class="peak">6 events</div>
-        <p>The distribution shifts toward a higher average count.</p>
-        <canvas id="chart6"></canvas>
-      </div>
-      <div class="compare-card">
-        <div class="tag" style="color:#b5a0ff">λ = 10 · HIGH</div>
-        <div class="peak">10 events</div>
-        <p>More probability lies around larger event counts.</p>
-        <canvas id="chart10"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <section class="inference">
-    <h3>GRAPH INFERENCE</h3>
-    <p id="inference">
-      As λ increases, the distribution shifts to the right, indicating a larger
-      expected number of events. The variance also increases, so the distribution
-      becomes more spread out in absolute event counts.
-    </p>
-  </section>
+<section class="card" id="inference">
+<div class="inference">
+<h3>5. Inference from the Graph</h3>
+<p>As λ increases from 2 to 6 to 10, the distribution shifts to the right. The mean and variance increase together. The distribution becomes wider in absolute terms and generally more symmetric for larger values of λ.</p>
+</div>
+</section>
 </main>
 
-<footer>PROBABILITY & STATISTICS LAB · POISSON EVENT MODEL · RESULTS UPDATE AUTOMATICALLY</footer>
+<footer>Discrete Probability Distributions | Interactive Laboratory Exercise</footer>
 
 <script>
-const $ = id => document.getElementById(id);
-const colors = {2:"#65d9cf",6:"#f5bd68",10:"#b5a0ff"};
-let mainChart;
-let miniCharts = {};
+const lambdaInput=document.getElementById("lambda");
+const kInput=document.getElementById("k");
+const error=document.getElementById("error");
+let chart=null,compareAll=true,selectedLambda=6;
 
-function poissonPMF(k, lambda) {
-  if (k < 0 || !Number.isInteger(k)) return 0;
-  let prob = Math.exp(-lambda);
-  for (let i = 1; i <= k; i++) prob *= lambda / i;
-  return prob;
+function pmf(l,k){
+ if(k<0||!Number.isInteger(k))return 0;
+ if(l===0)return k===0?1:0;
+ let logFact=0;
+ for(let i=2;i<=k;i++)logFact+=Math.log(i);
+ return Math.exp(-l+k*Math.log(l)-logFact);
 }
-function poissonCDF(k, lambda) {
-  let sum = 0;
-  for (let i = 0; i <= k; i++) sum += poissonPMF(i, lambda);
-  return Math.min(1, sum);
+function cdf(l,k){
+ if(k<0)return 0;
+ if(l===0)return 1;
+ let prob=Math.exp(-l),sum=prob;
+ for(let i=1;i<=k;i++){prob*=l/i;sum+=prob;}
+ return Math.min(1,sum);
 }
-function pct(v) { return (v * 100).toFixed(2) + "%"; }
-function dec(v) { return v.toFixed(4); }
+function fmt(v){return v.toFixed(6)}
+function pct(v){return (v*100).toFixed(4)+"%"}
 
-function createMainChart(lambda) {
-  const maxK = Math.max(20, lambda * 2 + 8);
-  const labels = Array.from({length:maxK+1},(_,i)=>i);
-  const data = labels.map(k=>poissonPMF(k,lambda));
-  if (mainChart) mainChart.destroy();
-  mainChart = new Chart($("mainChart"), {
-    type:"bar",
-    data:{
-      labels,
-      datasets:[{
-        label:"P(X = k)",
-        data,
-        backgroundColor:labels.map(k=>k===lambda?colors[lambda]||"#f5bd68":"rgba(245,189,104,.42)"),
-        borderColor:labels.map(k=>k===lambda?colors[lambda]||"#f5bd68":"rgba(245,189,104,.65)"),
-        borderWidth:1,
-        borderRadius:4
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:c=>" P(X = "+c.label+") = "+c.parsed.y.toFixed(5)}}
-      },
-      scales:{
-        x:{title:{display:true,text:"Number of events (k)",color:"#929cb1"},ticks:{color:"#929cb1"},grid:{display:false}},
-        y:{beginAtZero:true,title:{display:true,text:"Probability",color:"#929cb1"},ticks:{color:"#929cb1"},grid:{color:"rgba(146,156,177,.12)"}}
-      }
+function update(){
+ const l=Number(lambdaInput.value),k=Number(kInput.value);
+ if(lambdaInput.value.trim()===""||!Number.isFinite(l)||l<0||l>100){
+  error.textContent="Enter λ between 0 and 100.";return;
+ }
+ if(kInput.value.trim()===""||!Number.isInteger(k)||k<0||k>200){
+  error.textContent="Enter a whole number of events between 0 and 200.";return;
+ }
+ error.textContent="";
+ document.getElementById("mean").textContent=l.toFixed(4);
+ document.getElementById("variance").textContent=l.toFixed(4);
+ document.getElementById("sd").textContent=Math.sqrt(l).toFixed(4);
+ const exact=pmf(l,k),atMost=cdf(l,5);
+ document.getElementById("exactFormula").textContent="P(X = "+k+")";
+ document.getElementById("exact").textContent=fmt(exact);
+ document.getElementById("exactPercent").textContent=pct(exact);
+ document.getElementById("cdf").textContent=fmt(atMost);
+ document.getElementById("cdfPercent").textContent=pct(atMost);
+ document.getElementById("explanation").textContent=
+ "For λ = "+l+", P(X = "+k+") = "+fmt(exact)+" ("+pct(exact)+
+ "). The probability of at most 5 events is "+fmt(atMost)+" ("+pct(atMost)+").";
+ drawChart();
+}
+
+function drawChart(){
+ const lambdas=compareAll?[2,6,10]:[selectedLambda];
+ const colors={2:"#2563eb",6:"#16a34a",10:"#ea580c"};
+ const labels=Array.from({length:26},(_,i)=>i);
+ const datasets=lambdas.map(l=>({
+  label:"λ = "+l,
+  data:labels.map(k=>pmf(l,k)),
+  backgroundColor:colors[l],
+  borderColor:colors[l],
+  borderWidth:1,
+  maxBarThickness:28
+ }));
+ if(chart){
+  chart.data.labels=labels;
+  chart.data.datasets=datasets;
+  chart.update();
+ }else{
+  chart=new Chart(document.getElementById("chart"),{
+   type:"bar",
+   data:{labels,datasets},
+   options:{
+    responsive:true,maintainAspectRatio:false,
+    interaction:{intersect:false,mode:"index"},
+    plugins:{legend:{position:"top"}},
+    scales:{
+     x:{title:{display:true,text:"Number of Events (k)"},grid:{display:false}},
+     y:{beginAtZero:true,title:{display:true,text:"Probability P(X = k)"}}
     }
+   }
   });
+ }
+ document.getElementById("chartTitle").textContent=compareAll?
+ "Comparing λ = 2, 6, and 10":"Current distribution: λ = "+selectedLambda;
+ document.getElementById("chartText").textContent=compareAll?
+ "λ = 2 concentrates probability around smaller counts; λ = 6 peaks near 5–6 events; λ = 10 shifts the peak toward 9–10 events.":
+ "For λ = "+selectedLambda+", the mean and variance are both "+selectedLambda+". The distribution is centered around this event rate.";
+ document.querySelectorAll("[data-lambda]").forEach(b=>
+  b.classList.toggle("active",!compareAll&&Number(b.dataset.lambda)===selectedLambda));
+ document.getElementById("all").classList.toggle("active",compareAll);
 }
-function createMiniChart(lambda) {
-  const labels=Array.from({length:21},(_,i)=>i);
-  const canvas=$("chart"+lambda);
-  if(miniCharts[lambda]) miniCharts[lambda].destroy();
-  miniCharts[lambda]=new Chart(canvas,{
-    type:"line",
-    data:{labels,datasets:[{
-      data:labels.map(k=>poissonPMF(k,lambda)),
-      borderColor:colors[lambda],backgroundColor:colors[lambda]+"25",
-      fill:true,tension:.3,pointRadius:0,borderWidth:2
-    }]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{enabled:true}},
-      scales:{
-        x:{display:false},
-        y:{display:false,beginAtZero:true}
-      },
-      elements:{line:{capBezierPoints:true}}
-    }
-  });
-}
-function update() {
-  const lambda=Number($("lambda").value);
-  const k1=Number($("kExact").value);
-  const k2=Number($("kCDF").value);
-  const pExact=poissonPMF(k1,lambda);
-  const pCDF=poissonCDF(k2,lambda);
-
-  $("mean").textContent=lambda.toFixed(2);
-  $("variance").textContent=lambda.toFixed(2);
-  $("exact").textContent=pct(poissonPMF(8,lambda));
-  $("cdf").textContent=pct(poissonCDF(5,lambda));
-
-  $("kExactValue").textContent=k1;
-  $("kCDFValue").textContent=k2;
-  $("exactTitle").textContent="PROBABILITY OF EXACTLY "+k1+" EVENT"+(k1===1?"":"S");
-  $("cdfTitle").textContent="PROBABILITY OF AT MOST "+k2+" EVENTS";
-  $("exactResult").textContent=dec(pExact);
-  $("exactPercent").textContent=pct(pExact)+" chance";
-  $("cdfResult").textContent=dec(pCDF);
-  $("cdfPercent").textContent=pct(pCDF)+" chance";
-  $("chartLabel").textContent="λ = "+lambda;
-
-  createMainChart(lambda);
-  $("inference").textContent=
-    "For λ = "+lambda+", the mean and variance are both "+lambda+". "+
-    "The distribution's peak is around "+Math.floor(lambda)+
-    " event"+(Math.floor(lambda)===1?"":"s")+". Comparing λ = 2, 6 and 10, "+
-    "a larger λ moves the probability mass toward higher event counts. "+
-    "The variance increases from 2 to 6 to 10, so the spread in absolute counts increases. "+
-    "For large λ, the shape also becomes more symmetric and bell-like.";
-}
-
-$("lambda").addEventListener("change",update);
-$("kExact").addEventListener("input",update);
-$("kCDF").addEventListener("input",update);
-
-createMiniChart(2);
-createMiniChart(6);
-createMiniChart(10);
+lambdaInput.addEventListener("input",update);
+kInput.addEventListener("input",update);
+document.querySelectorAll("[data-lambda]").forEach(b=>b.addEventListener("click",()=>{
+ selectedLambda=Number(b.dataset.lambda);compareAll=false;drawChart();
+}));
+document.getElementById("all").addEventListener("click",()=>{
+ compareAll=true;drawChart();
+});
 update();
 </script>
 </body>
